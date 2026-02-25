@@ -1,4 +1,4 @@
-import docs from "../utils/docs.json" assert { type: "json" };
+import docs from "../utils/docs.json" with { type: "json" };
 
 export function findRelevantDocs(question) {
   const lower = question.toLowerCase();
