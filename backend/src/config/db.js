@@ -1,6 +1,6 @@
 import { createClient } from "@libsql/client";
 import dotenv from "dotenv";
-import { TURSO_AUTH_TOKEN, TURSO_DATABASE_URL } from "./serverConfig";
+import { TURSO_AUTH_TOKEN, TURSO_DATABASE_URL } from "./serverConfig.js";
 
 dotenv.config();
 
