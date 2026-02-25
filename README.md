@@ -36,7 +36,7 @@ Each folder has its own `package.json` and can be run independently.
    TURSO_AUTH_TOKEN=your_token
    COHERE_API_KEY=your_cohere_key
    ```
-   *If you prefer a local SQLite file,* replace the `db.js` client with `sqlite3` or `better-sqlite3` and adjust `TURSO_` variables accordingly.
+   _If you prefer a local SQLite file,_ replace the `db.js` client with `sqlite3` or `better-sqlite3` and adjust `TURSO_` variables accordingly.
 3. Install dependencies: `npm install`
 4. Initialize the database tables: `node src/config/initDb.js`
 5. Start the server: `npm run dev` (or `node src/index.js`)
@@ -54,13 +54,18 @@ The backend will listen on `http://localhost:5000` by default.
 
 ## How it works
 
-
 The `/backend/src/utils/docs.json` file contains an array of FAQ-style entries:
 
 ```json
 [
-  { "title": "Reset Password", "content": "Users can reset password from Settings > Security." },
-  { "title": "Refund Policy", "content": "Refunds are allowed within 7 days of purchase." }
+  {
+    "title": "Reset Password",
+    "content": "Users can reset password from Settings > Security."
+  },
+  {
+    "title": "Refund Policy",
+    "content": "Refunds are allowed within 7 days of purchase."
+  }
 ]
 ```
 
@@ -80,29 +85,29 @@ Tables are created by `src/config/initDb.js`.
 
 **sessions**
 
-| column     | type     | notes                          |
-|------------|----------|--------------------------------|
-| id         | TEXT     | sessionId (UUID or similar)    |
-| created_at | DATETIME | default CURRENT_TIMESTAMP      |
-| updated_at | DATETIME | touched on each chat message   |
+| column     | type     | notes                        |
+| ---------- | -------- | ---------------------------- |
+| id         | TEXT     | sessionId (UUID or similar)  |
+| created_at | DATETIME | default CURRENT_TIMESTAMP    |
+| updated_at | DATETIME | touched on each chat message |
 
 **messages**
 
-| column     | type    | notes                               |
-|------------|---------|-------------------------------------|
-| id         | INTEGER | primary key autoincrement          |
-| session_id | TEXT    | foreign key to sessions.id         |
-| role       | TEXT    | "user" or "assistant"           |
-| content    | TEXT    | message body                       |
-| created_at | DATETIME| default CURRENT_TIMESTAMP          |
+| column     | type     | notes                      |
+| ---------- | -------- | -------------------------- |
+| id         | INTEGER  | primary key autoincrement  |
+| session_id | TEXT     | foreign key to sessions.id |
+| role       | TEXT     | "user" or "assistant"      |
+| content    | TEXT     | message body               |
+| created_at | DATETIME | default CURRENT_TIMESTAMP  |
 
 ### API endpoints
 
-| Method | Path                     | Description                               |
-|--------|--------------------------|-------------------------------------------|
-| POST   | `/api/chat`              | Send a user message, receive assistant reply. Must include `sessionId` and `message` in JSON body. Returns `{ reply, tokensUsed }`. |
-| GET    | `/api/conversations/:sessionId` | Fetch full message history for a session. | 
-| GET    | `/api/sessions`          | List all sessions with last updated timestamp. |
+| Method | Path                            | Description                                                                                                                         |
+| ------ | ------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------- |
+| POST   | `/api/chat`                     | Send a user message, receive assistant reply. Must include `sessionId` and `message` in JSON body. Returns `{ reply, tokensUsed }`. |
+| GET    | `/api/conversations/:sessionId` | Fetch full message history for a session.                                                                                           |
+| GET    | `/api/sessions`                 | List all sessions with last updated timestamp.                                                                                      |
 
 Responses are JSON. Errors are reported with HTTP status codes and an `error` field. Basic rate limiting is enabled (50 requests per 15 minutes per IP).
 
