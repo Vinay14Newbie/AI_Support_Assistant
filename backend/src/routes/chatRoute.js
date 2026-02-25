@@ -43,8 +43,19 @@ router.post("/chat", async (req, res, next) => {
     const relevantDocs = findRelevantDocs(message);
 
     if (relevantDocs.length === 0) {
+      const fallback = "Sorry, I don’t have information about that.";
+      // store assistant fallback
+      await db.execute({
+        sql: "INSERT INTO messages (session_id, role, content) VALUES (?, ?, ?)",
+        args: [sessionId, "assistant", fallback],
+      });
+      // update session timestamp
+      await db.execute({
+        sql: "UPDATE sessions SET updated_at = CURRENT_TIMESTAMP WHERE id = ?",
+        args: [sessionId],
+      });
       return res.json({
-        reply: "Sorry, I don’t have information about that.",
+        reply: fallback,
         tokensUsed: 0,
       });
     }
